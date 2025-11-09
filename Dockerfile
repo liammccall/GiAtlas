@@ -1,31 +1,25 @@
-FROM python:3.12-slim-bookworm
+# For more information, please refer to https://aka.ms/vscode-docker-python
+FROM python:3-slim-bookworm
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    POETRY_VERSION=1.8.3 \
-    POETRY_VIRTUALENVS_CREATE=false
+EXPOSE 5002
 
-# --- Install curl and Poetry ------------------------------------
-RUN apt-get update && \
-    apt-get install -y curl && \
-    curl -sSL https://install.python-poetry.org | python3 - && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE=1
 
-#Path for Poetry
-ENV PATH="/root/.local/bin:$PATH"
+# Turns off buffering for easier container logging
+ENV PYTHONUNBUFFERED=1
 
+# Install pip requirements
+COPY pyproject.toml .
+RUN poetry install
 
-# --- Set working directory inside the container ------------------
-WORKDIR /src/python
+WORKDIR /app
+COPY . /app
 
-# --- Copy dependency files first (for Docker cache) --------------
-COPY src/python/pyproject.toml src/python/poetry.lock* ./
+# Creates a non-root user with an explicit UID and adds permission to access the /app folder
+# For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
+RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+USER appuser
 
-# --- Install deps ------------------------------------------------
-RUN poetry install --no-interaction --no-ansi
-
-# --- Copy actual app code afterwards -----------------------------
-COPY src/python/ ./
-
-# --- Default CMD -------------------------------------------------
-CMD ["python", "-c", "print('hello world')"]
+# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+CMD ["gunicorn", "--bind", "0.0.0.0:5002", "src.python/main:app"]

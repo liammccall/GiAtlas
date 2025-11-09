@@ -12,6 +12,12 @@ ocean = gpd.read_file(data_dir + "ne_50m_ocean/ne_50m_ocean.shp")
 fig = rivers_lakes.plot().get_figure()
 fig.savefig(out_dir + "rivers_lakes.png")
 
+ax = coastline.plot(zorder=0)
+lakes.plot(ax=ax, zorder=1)
+# land.plot(ax=ax, zorder=2)
+# ocean.plot(ax=ax, zorder=3)
+ax.get_figure().savefig(out_dir + "combined.png")
+
 fig = coastline.plot().get_figure()
 fig.savefig(out_dir + "coastline.png")
 
