@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3-slim-bookworm
+FROM python:3.12-slim-bookworm
 
 EXPOSE 5002
 
@@ -9,8 +9,17 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
+#Install curl
+RUN apt-get update && \
+    apt-get install -y curl
+    
+# Install poetry
+RUN curl -sSL https://install.python-poetry.org | python3 - && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+ENV PATH="/root/.local/bin:${PATH}"
+
 # Install pip requirements
-COPY pyproject.toml .
+COPY pyproject.toml poetry.lock README.md ./
 RUN poetry install
 
 WORKDIR /app
