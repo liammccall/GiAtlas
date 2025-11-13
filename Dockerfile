@@ -17,7 +17,8 @@ RUN apt-get update && \
     apt-get install -y curl
 
 #Install gunicorn
-RUN apt-get install -y gunicorn
+#Moving this to pyproject.toml
+#RUN apt-get install -y gunicorn
     
 # Install poetry
 RUN curl -sSL https://install.python-poetry.org | python3 - && \
