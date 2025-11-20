@@ -1,8 +1,10 @@
 from flask import Flask, send_file
+from flask_cors import CORS
 
 import src.python.basicplotutil as bpl
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/")
 def hello_world():
