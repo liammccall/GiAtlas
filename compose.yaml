@@ -4,6 +4,11 @@ services:
     build:
       context: ./webserver
       dockerfile: Dockerfile
+    develop:
+      watch:
+        - path: ./webserver/src/python
+          action: sync
+          target: /app/src/python
     ports:
       - 5002:5002
   client:
