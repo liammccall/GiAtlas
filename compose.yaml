@@ -1,18 +1,18 @@
 services:
   webserver:
-    image: webserver
+    # image: webserver
     build:
       context: ./webserver
       dockerfile: Dockerfile
     develop:
       watch:
-        - path: ./webserver/src/python
+        - path: ./webserver
           action: sync
-          target: /app/src/python
+          target: /app
     ports:
       - 5002:5002
   client:
-    image: client
+    # image: client
     build:
       context: ./client
       dockerfile: Dockerfile
