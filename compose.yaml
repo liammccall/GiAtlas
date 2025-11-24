@@ -16,5 +16,10 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+    develop:
+      watch:
+        - path: ./client
+          action: sync
+          target: /app
     ports:
       - 5173:5173
