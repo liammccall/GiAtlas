@@ -12,6 +12,11 @@ function App() {
           <img src="http://localhost:5002/image1" className="logo" alt="Map" />
         </a>
       </div>
+      <div>
+        <a href="https://github.com/liammccall" target="_blank">
+          <img src="http://localhost:5002/image2" className="logo" alt="Map" />
+        </a>
+      </div>
       <h1>GiAtlas</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
