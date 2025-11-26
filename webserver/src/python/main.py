@@ -2,9 +2,12 @@ from flask import Flask, send_file
 from flask_cors import CORS
 
 import src.python.basicplotutil as bpl
+import src.python.basicdb as bdb
 
 app = Flask(__name__)
 CORS(app)
+
+bdb.save_file("coastline")
 
 @app.route("/image1")
 def serve_image_1():
