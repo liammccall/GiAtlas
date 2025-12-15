@@ -1,9 +1,19 @@
-import { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 // import Combobox from 'react-widgets/Combobox'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [file_name, setFile_name] = useState<string>("coastline")
+
+  const inputField = useRef<HTMLElement.input>("coastline")
+
+  useEffect(() => {
+    fetch('/api/save_image',{
+      method: "PUT",
+      body: JSON.stringify({data:file_name})
+    }).then()
+
+  }, [file_name])
 
   return (
     <>
@@ -19,8 +29,9 @@ function App() {
       </div>
       <h1>GiAtlas</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <input type="text" ref={inputField}/>
+        <button onClick={() => setFile_name()}>
+          Fetch
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test hmr
