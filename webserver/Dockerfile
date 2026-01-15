@@ -12,9 +12,9 @@ ENV PYTHONUNBUFFERED=1
 # Poetry config
 ENV POETRY_VIRTUALENVS_CREATE=false
 
-#Install curl
+#Install curl and psycopg2 requirements
 RUN apt-get update && \
-    apt-get install -y curl
+    apt-get install -y curl libpq-dev gcc
 
 #Install gunicorn
 #Moving this to pyproject.toml
