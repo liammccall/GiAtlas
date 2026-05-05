@@ -5,7 +5,7 @@ import './App.css'
 function App() {
   const [file_name, setFile_name] = useState<string>("coastline")
 
-  const inputField = useRef<HTMLElement.input>("coastline")
+  const inputField = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetch('/api/save_image',{
@@ -30,12 +30,9 @@ function App() {
       <h1>GiAtlas</h1>
       <div className="card">
         <input type="text" ref={inputField}/>
-        <button onClick={() => setFile_name()}>
+        <button onClick={() => setFile_name(inputField.current?.value ?? "")}>
           Fetch
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test hmr
-        </p>
       </div>
       <p className="read-the-docs">
         GRGIS
