@@ -60,7 +60,7 @@ Executes a natural language or structured query.
 
 Request:
 {
-  "file_name": "coastline"
+  "file_name": "Combine rivers and lakes with coastline within 100 meters of a river mouth."
 }
 
 Response:
@@ -81,11 +81,11 @@ Returns GeoJSON for a stored dataset.
 
 Docker Compose services:
 
-Frontend: http://localhost:5173  
-Backend: http://localhost:5002  
-PostGIS: localhost:5433  
-Adminer: http://localhost:8080  
-LLM API: http://localhost:8000  
+Frontend: localhost:5173 
+Backend: localhost:5002 
+PostGIS: localhost:5433
+Adminer: localhost:8080
+LLM API: localhost:8000 
 
 Run:
 
@@ -101,19 +101,19 @@ docker compose up --build
 
 ## Tech Stack
 
-React, TypeScript, Leaflet  
-Flask, GeoPandas  
-PostgreSQL, PostGIS  
-Django (LLM router)  
-llama.cpp (local inference)  
-Docker Compose  
+React, TypeScript, Leaflet
+Flask, GeoPandas
+PostgreSQL, PostGIS
+Django (LLM router)
+llama.cpp (local inference)
+Docker Compose
 
 ## Project Structure
 
-client/        React frontend  
-webserver/     Flask API + geospatial logic  
-llm-router/    LLM inference service  
-docker-compose.yml  
+client/        React frontend
+webserver/     Flask API + geospatial logic
+llm-router/    LLM inference service
+docker-compose.yml
 
 ## Future Work
 
