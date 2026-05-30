@@ -11,6 +11,9 @@ services:
           target: /app
     ports:
       - 5002:5002
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   client:
     # image: client
     build:
@@ -21,6 +24,8 @@ services:
         - path: ./client
           action: sync
           target: /app
+    volumes:
+     - ./client:/app
     ports:
       - 5173:5173
 
@@ -29,20 +34,15 @@ services:
     restart: always
     # set shared memory limit when using docker compose
     shm_size: 128mb
-    # or set shared memory limit when deploy via swarm stack
-    #volumes:
-    #  - type: tmpfs
-    #    target: /dev/shm
-    #    tmpfs:
-    #      size: 134217728 # 128*2^20 bytes = 128Mb
-    # ports:
-    #   - 5432:5432
     environment:
       POSTGRES_USER: username
       POSTGRES_PASSWORD: password
       POSTGRES_DB: gidb
     volumes:
       - postgis_data:/var/lib/postgresql/data
+
+    ports:
+     - 5433:5432
 
   adminer:
     image: adminer

@@ -1,42 +1,124 @@
-import React, { useState, useEffect, useRef } from 'react'
-// import Combobox from 'react-widgets/Combobox'
+import { useState, useRef, useCallback } from 'react'
 import './App.css'
 
+import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
+
 function App() {
-  const [file_name, setFile_name] = useState<string>("coastline")
+  const webserverUrl = "http://localhost:5002"
 
-  const inputField = useRef<HTMLInputElement>(null);
+  // const [fileName, setFileName] = useState("coastline")
+  // const [query, setQuery] = useState("")
+  const [geoKey, _coreSetGeoKey] = useState(0)
+  const [geoData, _coreSetGeoData] = useState<GeoJSON.GeoJsonObject>()
 
-  useEffect(() => {
-    fetch('/api/save_image',{
-      method: "PUT",
-      body: JSON.stringify({data:file_name})
-    }).then()
+  const inputField = useRef<HTMLInputElement>(null)
+  const natEarthField = useRef<HTMLInputElement>(null)
 
-  }, [file_name])
+  // useEffect(() => {
+  //   (async () => {
+  //     await fetch(webserverUrl + '/api/save_image',{
+  //       method: "POST",
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: JSON.stringify({file_name:fileName})
+  //     })
+
+  //     console.log("saved" + fileName)
+
+  //     const response = await fetch(
+  //       `${webserverUrl}/geojson/${fileName}?t=${Date.now()}`
+  //     )
+
+  //     console.log("fetched" + fileName)
+
+  //     const data = await response.json()
+
+  //     setGeoData(data)
+
+  //     console.log("set" + fileName)
+  //   })()
+  // }, [fileName])
+
+
+  
+  
+  const generateMap = useCallback(async (query: string) => {
+
+      const response = await fetch(webserverUrl + '/api/query',{
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({file_name:query})
+      })
+
+      function setGeoData(data: GeoJSON.GeoJsonObject) {
+        _coreSetGeoKey(k => k + 1)
+        _coreSetGeoData(data)
+      }
+
+      console.log("fetched: " + query)
+
+      const data = await response.json()
+
+      setGeoData(data)
+
+      console.log("set: " + query)
+    }
+  , [webserverUrl])
+
+  function saveNatEarth(fileName: string): void{
+      (async () => {
+        await fetch(webserverUrl + '/api/save_image',
+          {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({file_name:fileName})
+          });
+      })();
+  }
 
   return (
     <>
-      <div>
-        <a href="https://github.com/liammccall" target="_blank">
-          <img src="http://localhost:5002/image1" className="logo" alt="Map" />
-        </a>
-      </div>
-      <div>
-        <a href="https://github.com/liammccall" target="_blank">
-          <img src="http://localhost:5002/image2" className="logo" alt="Map" />
-        </a>
-      </div>
       <h1>GiAtlas</h1>
+
       <div className="card">
-        <input type="text" ref={inputField}/>
-        <button onClick={() => setFile_name(inputField.current?.value ?? "")}>
-          Fetch
+        <input type="text" ref={inputField} />
+
+        <button
+          onClick={() =>
+            generateMap(inputField.current?.value ?? "")
+          }
+        >
+          Query
         </button>
       </div>
-      <p className="read-the-docs">
-        GRGIS
-      </p>
+
+      <div className="card">
+        <input type="text" ref={natEarthField} />
+
+        <button
+          onClick={() =>
+            saveNatEarth(natEarthField.current?.value ?? "")
+          }
+        >
+          Save
+        </button>
+      </div>
+
+      <MapContainer
+        center={[20, 0]}
+        zoom={2}
+        style={{
+          height: "600px",
+          width: "100%"
+        }}
+      >
+        <TileLayer
+          attribution='&copy; OpenStreetMap contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+
+        {geoData && <GeoJSON data={geoData} key={geoKey}/>}
+      </MapContainer>
     </>
   )
 }
