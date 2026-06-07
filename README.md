@@ -1,5 +1,5 @@
 
-# GiAtlas
+# GiAtlas README
 
 GiAtlas is a full-stack geospatial data exploration platform combining PostGIS, Flask, React (Leaflet), and a local LLM-driven SQL generation pipeline for natural language querying and interactive map visualization of spatial datasets.
 
